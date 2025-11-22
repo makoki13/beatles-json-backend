@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const sequelize = require('./config/database'); // Importa la instancia de Sequelize
 const personajesRoutes = require('./routes/personajes'); // Importa las rutas de personajes
+const cancionesRoutes = require('./routes/canciones'); // <-- IMPORTA ESTO NUEVO
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,6 +14,7 @@ app.use(express.json()); // Para parsear JSON en el body
 
 // Rutas
 app.use('/api/personajes', personajesRoutes); // Monta las rutas bajo /api/personajes
+app.use('/api/canciones', cancionesRoutes);  // <-- AÑADE ESTO NUEVO: Monta las rutas bajo /api/canciones
 
 // Ruta de prueba
 app.get('/', (req, res) => {

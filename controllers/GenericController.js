@@ -1,15 +1,39 @@
 // backend-beatles/controllers/GenericController.js
 
-// Función fábrica que devuelve un objeto con métodos CRUD genéricos
+const convertirCadenasVaciasANull = (obj) => {
+  const resultado = { ...obj };
+  for (const key in resultado) {
+    if (Object.hasOwn(resultado, key)) {
+      if (resultado[key] === '') {
+        resultado[key] = null;
+      }
+    }
+  }
+  return resultado;
+};
+
 const GenericController = (model) => {
   return {
     // Obtener todos los registros
     getAll: async (req, res) => {
       try {
-        // req.query puede contener filtros (p.ej., ?nombre=John)
-        // Aquí puedes aplicar lógica de búsqueda si es necesario
-        // Por ahora, simplemente findAll
-        const items = await model.findAll();
+        // --- Cambio Aquí ---
+        // Obtener parámetros de ordenación desde la query string (por ejemplo, ?sort=nombre&order=ASC)
+        const { sort = 'id', order = 'ASC' } = req.query; // Valores por defecto: ordenar por 'id', ascendente
+
+        // Construir el objeto de ordenación para Sequelize
+        // Asegúrate de que 'sort' sea un campo válido para prevenir inyección SQL
+        // Opciones válidas para Personaje: id, nombre, fecha_nacimiento, lugar_nacimiento, fecha_fallecimiento, lugar_fallecimiento
+        // Opciones válidas para Cancion: id, nombre, ...
+        // Debes validar sort según el modelo que se esté usando.
+        // Por simplicidad en este ejemplo, asumiremos que 'sort' es un campo conocido para el modelo en cuestión.
+        // En producción, deberías validar 'sort' contra una lista blanca de campos permitidos para cada modelo.
+        const orderArray = [[sort, order.toUpperCase()]]; // Sequelize espera un array de arrays
+
+        const items = await model.findAll({
+          order: orderArray // Aplica el orden aquí
+        });
+        // --- Fin Cambio ---
         res.status(200).json(items);
       } catch (error) {
         console.error('Error en GenericController.getAll:', error);
@@ -17,7 +41,6 @@ const GenericController = (model) => {
       }
     },
 
-    // Obtener un registro por ID
     getById: async (req, res) => {
       try {
         const { id } = req.params;
@@ -32,23 +55,22 @@ const GenericController = (model) => {
       }
     },
 
-    // Crear un nuevo registro
     create: async (req, res) => {
       try {
-        const newItem = await model.create(req.body);
+        const datosParaCrear = convertirCadenasVaciasANull(req.body);
+        const newItem = await model.create(datosParaCrear);
         res.status(201).json(newItem);
       } catch (error) {
         console.error('Error en GenericController.create:', error);
-        // Manejo de errores de validación de Sequelize u otros
         res.status(400).json({ error: error.message || 'Error al crear el registro.' });
       }
     },
 
-    // Actualizar un registro existente
     update: async (req, res) => {
       try {
         const { id } = req.params;
-        const [updatedRowsCount] = await model.update(req.body, {
+        const datosParaActualizar = convertirCadenasVaciasANull(req.body);
+        const [updatedRowsCount] = await model.update(datosParaActualizar, {
           where: { id: id }
         });
 
@@ -56,7 +78,6 @@ const GenericController = (model) => {
           return res.status(404).json({ error: 'Registro no encontrado para actualizar.' });
         }
 
-        // Opcional: Devolver el registro actualizado
         const updatedItem = await model.findByPk(id);
         res.status(200).json(updatedItem);
       } catch (error) {
@@ -65,7 +86,6 @@ const GenericController = (model) => {
       }
     },
 
-    // Eliminar un registro
     delete: async (req, res) => {
       try {
         const { id } = req.params;
@@ -77,7 +97,7 @@ const GenericController = (model) => {
           return res.status(404).json({ error: 'Registro no encontrado para eliminar.' });
         }
 
-        res.status(204).end(); // No Content
+        res.status(204).end();
       } catch (error) {
         console.error('Error en GenericController.delete:', error);
         res.status(500).json({ error: 'Error interno del servidor al eliminar el registro.' });

@@ -14,10 +14,12 @@ const Personaje = sequelize.define('Personaje', {
     type: DataTypes.STRING
   },
   fecha_fallecimiento: {
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    allowNull: true
   },
   lugar_fallecimiento: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   }
 }, {
   tableName: 'personajes', // Nombre de la tabla en PostgreSQL
