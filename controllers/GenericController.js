@@ -1,16 +1,6 @@
 // backend-beatles/controllers/GenericController.js
 
-const convertirCadenasVaciasANull = (obj) => {
-  const resultado = { ...obj };
-  for (const key in resultado) {
-    if (Object.hasOwn(resultado, key)) {
-      if (resultado[key] === '') {
-        resultado[key] = null;
-      }
-    }
-  }
-  return resultado;
-};
+const { convertirCadenasVaciasANull } = require('../utils/utilidades');
 
 const GenericController = (model) => {
   return {

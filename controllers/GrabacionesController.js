@@ -6,8 +6,8 @@ const Demo = require('../models/Demo');
 const Estudio = require('../models/Estudio');
 const Actuacion = require('../models/Actuacion');
 const Entrevista = require('../models/Entrevista');
-
-const convertirCadenasVaciasANull = require('./GenericController').convertirCadenasVaciasANull; // Asumiendo que la función está exportada
+const sequelize = require('../config/database');
+const { convertirCadenasVaciasANull } = require('../utils/utilidades');
 
 const GrabacionesController = {
   // Obtener todas las grabaciones con datos de canción y sesión (opcional)
