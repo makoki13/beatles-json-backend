@@ -6,6 +6,8 @@ const personajesRoutes = require('./routes/personajes'); // Importa las rutas de
 const cancionesRoutes = require('./routes/canciones'); 
 const sesionesRoutes = require('./routes/sesiones');
 const grabacionesRoutes = require('./routes/grabaciones'); 
+const demosRoutes = require('./routes/demos');
+const estudiosRoutes = require('./routes/estudios');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,6 +21,8 @@ app.use('/api/personajes', personajesRoutes); // Monta las rutas bajo /api/perso
 app.use('/api/canciones', cancionesRoutes);  // <-- AÑADE ESTO NUEVO: Monta las rutas bajo /api/canciones
 app.use('/api/sesiones', sesionesRoutes);  
 app.use('/api/grabaciones', grabacionesRoutes);
+app.use('/api/demos', demosRoutes);
+app.use('/api/estudios', estudiosRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
