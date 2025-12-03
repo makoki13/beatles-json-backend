@@ -12,6 +12,8 @@ const actuacionesRoutes = require('./routes/actuaciones');
 const entrevistasRoutes = require('./routes/entrevistas');
 const remixesRoutes = require('./routes/remixes');
 const obrasRoutes = require('./routes/obras');
+const mastersRoutes = require('./routes/masters'); // <-- IMPORTA ESTO
+const masterCancionesRoutes = require('./routes/master_canciones'); 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -31,6 +33,8 @@ app.use('/api/actuaciones', actuacionesRoutes);
 app.use('/api/entrevistas', entrevistasRoutes);
 app.use('/api/remixes', remixesRoutes);
 app.use('/api/obras', obrasRoutes);
+app.use('/api/master_canciones', masterCancionesRoutes); // <-- AÑADE ESTO PRIMERO (por dependencias)
+app.use('/api/masters', mastersRoutes); // <-- AÑADE ESTO
 
 // Ruta de prueba
 app.get('/', (req, res) => {
