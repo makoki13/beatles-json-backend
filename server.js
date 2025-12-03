@@ -11,6 +11,7 @@ const estudiosRoutes = require('./routes/estudios');
 const actuacionesRoutes = require('./routes/actuaciones');
 const entrevistasRoutes = require('./routes/entrevistas');
 const remixesRoutes = require('./routes/remixes');
+const obrasRoutes = require('./routes/obras');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -29,6 +30,7 @@ app.use('/api/estudios', estudiosRoutes);
 app.use('/api/actuaciones', actuacionesRoutes); 
 app.use('/api/entrevistas', entrevistasRoutes);
 app.use('/api/remixes', remixesRoutes);
+app.use('/api/obras', obrasRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
