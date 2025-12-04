@@ -1,6 +1,6 @@
 // backend-beatles/controllers/PersonajesController.js
 const GenericController = require('./GenericController');
-const Personaje = require('../models/Personajes'); // Importa el modelo específico
+const Personaje = require('../models/Personaje'); // Importa el modelo específico
 
 // Creamos el controlador específico usando la fábrica genérica
 const PersonajesController = GenericController(Personaje);

@@ -25,26 +25,24 @@ const Master = sequelize.define('Master', {
   }
 }, {
   tableName: 'masters',
-  timestamps: false
+  timestamps: false,
+  toJSON: function() {
+    const values = this.get({ plain: true });
+    // Aplica la lógica de formateo de duración si es necesario aquí también
+    // si esperas recibir master_canciones en el JSON del Master.
+    // Aunque generalmente se formatea en el modelo MasterCancion.
+    return values;
+  }
 });
 
-// Definir asociaciones
-// Master pertenece a una Obra
-Master.belongsTo(Obra, { foreignKey: 'obra_id', as: 'obra' });
-
-// Asociación M:N entre Master y MasterCancion a través de la tabla intermedia 'masters_master_canciones'
-Master.belongsToMany(MasterCancion, {
-  through: 'masters_master_canciones', // Nombre de la tabla intermedia
-  foreignKey: 'master_id',           // Clave foránea para Master en la tabla intermedia
-  otherKey: 'master_cancion_id',     // Clave foránea para MasterCancion en la tabla intermedia
-  as: 'master_canciones'             // Alias para la asociación
-});
-
-MasterCancion.belongsToMany(Master, {
-  through: 'masters_master_canciones',
-  foreignKey: 'master_cancion_id',
-  otherKey: 'master_id',
-  as: 'masters' // Alias para la asociación inversa
-});
+Master.associate = (models) => {
+  Master.belongsTo(models.Obra, { foreignKey: 'obra_id', as: 'obra' });
+  Master.belongsToMany(models.MasterCancion, {
+    through: 'masters_master_canciones',
+    foreignKey: 'master_id',
+    otherKey: 'master_cancion_id',
+    as: 'master_canciones'
+  });
+};
 
 module.exports = Master;

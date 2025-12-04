@@ -1,17 +1,16 @@
-// backend-beatles-api/config/database.js
+// backend-beatles/config/database.js
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize('beatles', 'postgres', 'J0P4G3R1#beatles', {
-  host: 'localhost', // o la IP/dominio de tu servidor PostgreSQL
+  host: 'localhost',
   dialect: 'postgres',
-  port: 5433, // Puerto por defecto de PostgreSQL
-  // Opcional: Configuración adicional
-  logging: console.log, // Muestra las consultas SQL generadas (útil para debugging, deshabilitar en producción)
+  port: 5433,
+  logging: console.log, // Opcional: para ver las consultas SQL
   pool: {
-    max: 5, // Número máximo de conexiones en el pool
-    min: 0, // Número mínimo de conexiones en el pool
-    acquire: 30000, // Milisegundos que espera una conexión antes de lanzar un error
-    idle: 10000 // Milisegundos que una conexión puede estar inactiva antes de ser liberada
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
   }
 });
 
