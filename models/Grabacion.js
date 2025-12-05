@@ -27,7 +27,7 @@ const Grabacion = sequelize.define('Grabacion', {
     // Para duración, PostgreSQL tiene INTERVAL. En Sequelize puedes usar DataTypes.INTERVAL
     // o guardarla como STRING en formato HH:MM:SS o como número de segundos.
     // Usaremos STRING para simplificar por ahora, pero INTERVAL es más preciso para duraciones.
-    type: DataTypes.STRING, // Considera DataTypes.INTERVAL si usas PostgreSQL directamente
+    type: DataTypes.TIME, // Considera DataTypes.INTERVAL si usas PostgreSQL directamente
     allowNull: true
   },
   fecha: {

@@ -15,7 +15,7 @@ const Estudio = sequelize.define('Estudio', {
     onUpdate: 'CASCADE'
   },
   tipo: {
-    type: DataTypes.ENUM('Toma', 'Overdub', 'Toma+Overdub'),
+    type: DataTypes.ENUM('Take', 'Overdub', 'Toma+Overdub'),
     allowNull: false
   },
   ordinal: {

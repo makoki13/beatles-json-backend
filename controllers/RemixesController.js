@@ -5,7 +5,7 @@ const Remix = require('../models/Remix');
 const Cancion = require('../models/Cancion');
 const Sesion = require('../models/Sesion');
 const Grabacion = require('../models/Grabacion');
-const Estudio = require('../models/Estudio'); // Importamos Estudio para validar tomas_ids
+const Estudio = require('../models/Estudio'); // Importamos Estudio para validar Takes_ids
 const sequelize = require('../config/database'); 
 const { convertirCadenasVaciasANull } = require('../utils/utilidades');
 
@@ -77,7 +77,7 @@ const RemixesController = {
           delete datosMezcla.id;
       }
 
-      // Validar tomas_ids: Deben ser IDs de grabaciones que existan en la tabla Estudio
+      // Validar takes_ids: Deben ser IDs de grabaciones que existan en la tabla Estudio
       // y cuya grabación asociada esté relacionada con la canción del remix.
       const tomasIds = datosMezcla.tomas_ids || [];
       if (tomasIds.length > 0) {
@@ -287,54 +287,6 @@ const RemixesController = {
       res.status(500).json({ error: 'Error interno del servidor al eliminar la mezcla.' });
     }
   },
-
-  /* getTomasDisponibles: async (req, res) => {
-    try {
-      const { cancionId } = req.params;
-
-      // Validar que cancionId sea un número
-      const id = parseInt(cancionId, 10);
-      if (isNaN(id)) {
-        return res.status(400).json({ error: 'ID de canción inválido.' });
-      }
-
-      const estudios = await Estudio.findAll({
-          attributes: ['id_grabacion'],
-          transaction: null // Asegúrate de no pasar una transacción si no es necesaria aquí
-      });
-
-      const idsDeEstudio = estudios.map(est => est.id_grabacion);
-      
-      const tomas = await Grabacion.findAll({
-        where: {
-          tipo: 'Toma', // Asumiendo que el tipo se almacena tal cual
-          cancion_id: id,
-          // Subconsulta para filtrar solo grabaciones que existen en Estudio
-          id: {[sequelize.Op.in]: idsDeEstudio}
-        },
-        attributes: ['id', 'descripcion', 'fecha', 'lugar'], // Seleccionar campos relevantes de la grabación Toma
-        include: [
-          {
-            model: Cancion,
-            as: 'cancion',
-            attributes: ['id', 'nombre']
-          },
-          {
-            model: Sesion,
-            as: 'sesion',
-            attributes: ['id', 'descripcion']
-          }
-        ]
-      });
-      res.status(200).json(tomas);
-
-    } catch (error) {
-      console.error('Error en RemixesController.getTomasDisponibles:', error);
-      res.status(500).json({ error: 'Error interno del servidor al obtener las tomas disponibles.' });
-    }
-  }
- */
-
     // --- Nueva Función: Obtener tomas disponibles para una canción (Versión Segura)---
   getTomasDisponibles: async (req, res) => {
     try {

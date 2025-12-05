@@ -79,7 +79,7 @@ const GrabacionesController = {
       if (tipo === 'Demo') {
         datosTipo.estudio = datosGrabacion.estudio || false; // Extrae 'estudio' del body
         delete datosGrabacion.estudio; // Elimina del objeto principal
-      } else if (tipo === 'Toma') {
+      } else if (tipo === 'Take') {
         datosTipo.tipo_estudio = datosGrabacion.tipo_estudio; // Extrae 'tipo_estudio'
         datosTipo.ordinal = datosGrabacion.ordinal; // Extrae 'ordinal' (puede ser null)
         delete datosGrabacion.tipo_estudio; // Elimina del objeto principal
@@ -105,7 +105,7 @@ const GrabacionesController = {
           id_grabacion: nuevaGrabacion.id,
           estudio: datosTipo.estudio
         }, { transaction });
-      } else if (tipo === 'Toma') {
+      } else if (tipo === 'Take') {
         await Estudio.create({
           id_grabacion: nuevaGrabacion.id,
           tipo: datosTipo.tipo_estudio,
@@ -220,7 +220,7 @@ const GrabacionesController = {
       // Eliminar el registro específico según el tipo
       if (tipo === 'Demo') {
         await Demo.destroy({ where: { id_grabacion: id } }, { transaction });
-      } else if (tipo === 'Toma') {
+      } else if (tipo === 'Take') {
         await Estudio.destroy({ where: { id_grabacion: id } }, { transaction });
       } else if (tipo === 'Actuación') {
         await Actuacion.destroy({ where: { id_grabacion: id } }, { transaction });

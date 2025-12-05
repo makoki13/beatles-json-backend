@@ -54,7 +54,7 @@ const EstudiosController = {
   // Crear, Actualizar, Eliminar: No se implementan directamente aquí
   // Se gestionan al crear/actualizar/eliminar la Grabación correspondiente
   create: async (req, res) => {
-    res.status(405).json({ error: 'Método no permitido. Los estudios se crean al crear una Grabación de tipo Toma.' });
+    res.status(405).json({ error: 'Método no permitido. Los estudios se crean al crear una Grabación de tipo Take.' });
   },
   update: async (req, res) => {
     res.status(405).json({ error: 'Método no permitido. Los estudios se actualizan al actualizar la Grabación relacionada.' });
