@@ -18,7 +18,7 @@ const obrasRoutes = require('./routes/obras');
 const masterCancionesRoutes = require('./routes/master_canciones');
 const mastersRoutes = require('./routes/masters');
 // Añadir otras rutas cuando las implementes
-// const discograficasRoutes = require('./routes/discograficas');
+const discograficasRoutes = require('./routes/discograficas');
 // const publicacionesRoutes = require('./routes/publicaciones');
 
 const app = express();
@@ -42,7 +42,7 @@ app.use('/api/obras', obrasRoutes);
 app.use('/api/master_canciones', masterCancionesRoutes);
 app.use('/api/masters', mastersRoutes);
 // Añadir otras rutas cuando las implementes
-// app.use('/api/discograficas', discograficasRoutes);
+app.use('/api/discograficas', discograficasRoutes);
 // app.use('/api/publicaciones', publicacionesRoutes);
 
 // Ruta de prueba
@@ -66,7 +66,7 @@ const MasterCancion = require('./models/MasterCancion');
 const Master = require('./models/Master');
 const MastersMasterCancion = require('./models/MastersMasterCancion');
 // Añadir otros modelos si es necesario
-// const Discografica = require('./models/Discografica');
+const Discografica = require('./models/Discografica');
 // const Publicacion = require('./models/Publicacion');
 
 // Definir todas las asociaciones
@@ -85,7 +85,7 @@ const models = {
   Master,
   MastersMasterCancion,
   // Añadir otros modelos si es necesario
-  // Discografica,
+  Discografica,
   // Publicacion,
 };
 
