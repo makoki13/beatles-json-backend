@@ -19,7 +19,7 @@ const masterCancionesRoutes = require('./routes/master_canciones');
 const mastersRoutes = require('./routes/masters');
 // Añadir otras rutas cuando las implementes
 const discograficasRoutes = require('./routes/discograficas');
-// const publicacionesRoutes = require('./routes/publicaciones');
+const publicacionesRoutes = require('./routes/publicaciones');
 
 const app = express();
 const PORT = process.env.PORT || 3001; // Usar puerto de variable de entorno o 3001 por defecto
@@ -67,7 +67,7 @@ const Master = require('./models/Master');
 const MastersMasterCancion = require('./models/MastersMasterCancion');
 // Añadir otros modelos si es necesario
 const Discografica = require('./models/Discografica');
-// const Publicacion = require('./models/Publicacion');
+const Publicacion = require('./models/Publicacion');
 
 // Definir todas las asociaciones
 const models = {
@@ -86,7 +86,7 @@ const models = {
   MastersMasterCancion,
   // Añadir otros modelos si es necesario
   Discografica,
-  // Publicacion,
+  Publicacion,
 };
 
 Object.keys(models).forEach(modelName => {
