@@ -43,7 +43,7 @@ app.use('/api/master_canciones', masterCancionesRoutes);
 app.use('/api/masters', mastersRoutes);
 // Añadir otras rutas cuando las implementes
 app.use('/api/discograficas', discograficasRoutes);
-// app.use('/api/publicaciones', publicacionesRoutes);
+app.use('/api/publicaciones', publicacionesRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
