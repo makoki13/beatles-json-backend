@@ -1,23 +1,39 @@
 // backend-beatles/controllers/DemosController.js
 const Demo = require('../models/Demo');
-const Grabacion = require('../models/Grabacion'); // Importamos el modelo relacionado
-const { convertirCadenasVaciasANull } = require('../utils/utilidades'); // Importamos la función auxiliar
+const Grabacion = require('../models/Grabacion'); // Importar Grabacion
+const Cancion = require('../models/Cancion'); // Importar Cancion
+const Sesion = require('../models/Sesion'); // Importar Sesion
+const { convertirCadenasVaciasANull } = require('../utils/utilidades'); // Asumiendo que está exportada
 
 const DemosController = {
-  // Obtener todas las demos con datos de la grabación relacionada
+  // Obtener todas las demos con datos de la grabación y la canción relacionada
   getAll: async (req, res) => {
     try {
+      // Mantenemos la posibilidad de ordenar, pero hay que tener cuidado con campos ambiguos si se incluyen tablas intermedias
       const { sort = 'id_grabacion', order = 'ASC' } = req.query; // Ordenar por id_grabacion por defecto
       const orderArray = [[sort, order.toUpperCase()]];
 
       const demos = await Demo.findAll({
         order: orderArray,
-        include: [ // Incluir datos de la grabación
+        include: [
           {
             model: Grabacion,
-            as: 'grabacion',
-            attributes: ['id', 'descripcion', 'tipo', 'fecha', 'lugar'] // Seleccionar campos relevantes de Grabacion
-            // Puedes incluir más campos si es necesario
+            as: 'grabacion', // Alias definido en la asociación de Demo
+            attributes: ['id', 'descripcion', 'tipo', 'fecha', 'lugar'], // Seleccionar campos relevantes de Grabacion
+            include: [ // Incluir datos de la canción Y la sesión asociadas a la grabación
+              {
+                model: Cancion,
+                as: 'cancion', // Alias definido en la asociación de Grabacion
+                attributes: ['id', 'nombre'] // Seleccionar solo el nombre de la canción
+              },
+              // --- Añadir Inclusión de Sesion ---
+              {
+                model: Sesion,
+                as: 'sesion', // Alias definido en la asociación de Grabacion
+                attributes: ['id', 'descripcion'] // Seleccionar campos relevantes de Sesion, como 'descripcion'
+              }
+              // --- Fin Añadir ---
+            ]
           }
         ]
       });
@@ -28,7 +44,8 @@ const DemosController = {
     }
   },
 
-  // Obtener una demo por ID de grabación con datos de la grabación
+
+  // Obtener una demo por ID de grabación con datos de la grabación y la canción
   getById: async (req, res) => {
     try {
       const { id } = req.params; // Este id es el id_grabacion
@@ -37,7 +54,21 @@ const DemosController = {
           {
             model: Grabacion,
             as: 'grabacion',
-            attributes: ['id', 'descripcion', 'tipo', 'fecha', 'lugar']
+            attributes: ['id', 'descripcion', 'tipo', 'fecha', 'lugar'],
+            include: [
+              {
+                model: Cancion,
+                as: 'cancion',
+                attributes: ['id', 'nombre']
+              },
+              // --- Añadir Inclusión de Sesion ---
+              {
+                model: Sesion,
+                as: 'sesion',
+                attributes: ['id', 'descripcion']
+              }
+              // --- Fin Añadir ---
+            ]
           }
         ]
       });
@@ -51,25 +82,15 @@ const DemosController = {
     }
   },
 
-  // Crear una nueva demo (esto se hace desde la creación de Grabacion, no directamente aquí)
-  // Si se quisiera crear directamente, se debería manejar cuidadosamente la FK.
+  // Crear, Actualizar, Eliminar: No se implementan directamente aquí
+  // Se gestionan al crear/actualizar/eliminar la Grabación correspondiente
   create: async (req, res) => {
-    // Este endpoint no es típico para una tabla con PK=FK si la creación se maneja en la entidad principal.
-    // Se podría implementar, pero requiere cuidado.
-    // Por ahora, lo dejamos como un placeholder o lo excluimos de las rutas comunes.
-    // Si necesitas crear demos directamente, asegúrate de que req.body.id_grabacion exista y sea válido.
     res.status(405).json({ error: 'Método no permitido. Las demos se crean al crear una Grabación de tipo Demo.' });
   },
-
-  // Actualizar una demo existente (esto se hace desde la actualización de Grabacion, no directamente aquí)
   update: async (req, res) => {
-    // Similar a create, la actualización directa puede no ser común.
-    res.status(405).json({ error: 'Método no permitido. Las demos se actualizan al actualizar la Grabación relacionada o por su propia lógica.' });
+    res.status(405).json({ error: 'Método no permitido. Las demos se actualizan al actualizar la Grabación relacionada.' });
   },
-
-  // Eliminar una demo (esto se hace desde la eliminación de Grabacion, no directamente aquí)
   delete: async (req, res) => {
-    // Similar a create/update, la eliminación directa puede no ser común.
     res.status(405).json({ error: 'Método no permitido. Las demos se eliminan al eliminar la Grabación relacionada.' });
   }
 };

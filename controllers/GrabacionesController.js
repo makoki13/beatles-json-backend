@@ -14,10 +14,24 @@ const GrabacionesController = {
   getAll: async (req, res) => {
     try {
       const { sort = 'id', order = 'ASC' } = req.query;
-      const orderArray = [[sort, order.toUpperCase()]];
+      const orderUpperCase = order.toUpperCase();
+
+      // --- LÓGICA PARA DETERMINAR EL ORDEN ---
+      // Si sort es 'fecha_sesion', ordenamos por la fecha de la sesión asociada
+      // Si no, ordenamos por el campo especificado en 'sort' del modelo principal 'Grabacion'
+      let orderArray;
+      if (sort === 'fecha_sesion') {
+        // Ordenar por la fecha de la sesión (campo 'fecha' en el modelo Sesion)
+        // La sintaxis es: [[ { model: ModeloRelacionado, as: 'alias_asociacion' }, 'campo_a_ordenar', 'DIRECCION']]
+        orderArray = [[{ model: Sesion, as: 'sesion' }, 'fecha', orderUpperCase]];
+      } else {
+        // Si el campo de ordenación no es 'fecha_sesion', se ordena por el campo del modelo principal 'Grabacion'
+        orderArray = [[sort, orderUpperCase]];
+      }
+      // --- FIN LÓGICA PARA DETERMINAR EL ORDEN ---
 
       const grabaciones = await Grabacion.findAll({
-        order: orderArray,
+        order: orderArray, // Usar el array de orden construido dinámicamente
         include: [ // Incluir datos de las tablas relacionadas
           {
             model: Cancion,
@@ -27,7 +41,8 @@ const GrabacionesController = {
           {
             model: Sesion,
             as: 'sesion',
-            attributes: ['id', 'descripcion'] // Seleccionar solo campos necesarios
+            attributes: ['id', 'descripcion', 'fecha'] // Incluir 'fecha' si se quiere mostrar o es relevante para otros cálculos
+            // Puedes incluir más campos de Sesion si es necesario
           }
         ]
       });
@@ -79,7 +94,7 @@ const GrabacionesController = {
       if (tipo === 'Demo') {
         datosTipo.estudio = datosGrabacion.estudio || false; // Extrae 'estudio' del body
         delete datosGrabacion.estudio; // Elimina del objeto principal
-      } else if (tipo === 'Take') {
+      } else if (tipo === 'Toma') {
         datosTipo.tipo_estudio = datosGrabacion.tipo_estudio; // Extrae 'tipo_estudio'
         datosTipo.ordinal = datosGrabacion.ordinal; // Extrae 'ordinal' (puede ser null)
         delete datosGrabacion.tipo_estudio; // Elimina del objeto principal
@@ -105,7 +120,7 @@ const GrabacionesController = {
           id_grabacion: nuevaGrabacion.id,
           estudio: datosTipo.estudio
         }, { transaction });
-      } else if (tipo === 'Take') {
+      } else if (tipo === 'Toma') {
         await Estudio.create({
           id_grabacion: nuevaGrabacion.id,
           tipo: datosTipo.tipo_estudio,
@@ -220,7 +235,7 @@ const GrabacionesController = {
       // Eliminar el registro específico según el tipo
       if (tipo === 'Demo') {
         await Demo.destroy({ where: { id_grabacion: id } }, { transaction });
-      } else if (tipo === 'Take') {
+      } else if (tipo === 'Toma') {
         await Estudio.destroy({ where: { id_grabacion: id } }, { transaction });
       } else if (tipo === 'Actuación') {
         await Actuacion.destroy({ where: { id_grabacion: id } }, { transaction });

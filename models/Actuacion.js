@@ -27,6 +27,15 @@ const Actuacion = sequelize.define('Actuacion', {
   timestamps: false
 });
 
-Actuacion.belongsTo(Grabacion, { foreignKey: 'id_grabacion', as: 'grabacion' });
+ Actuacion.associate = (models) => {
+  // Actuacion pertenece a una Grabacion
+  console.log("joderrr")
+  Actuacion.belongsTo(models.Grabacion, { // Usar 'models.Grabacion' como se pasa al llamar associate
+    foreignKey: 'id_grabacion',
+    as: 'grabacion' // Alias para la asociación
+  });
+};
+
+//Actuacion.belongsTo(Grabacion, { foreignKey: 'id_grabacion', as: 'grabacion' });
 
 module.exports = Actuacion;

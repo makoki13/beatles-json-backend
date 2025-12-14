@@ -3,6 +3,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Cancion = require('./Cancion'); // Importamos el modelo relacionado
 const Sesion = require('./Sesion'); // Importamos el modelo relacionado
+const Actuacion = require('./Actuacion');
 
 const Grabacion = sequelize.define('Grabacion', {
   descripcion: {
@@ -66,5 +67,6 @@ const Grabacion = sequelize.define('Grabacion', {
 Grabacion.belongsTo(Cancion, { foreignKey: 'cancion_id', as: 'cancion' });
 // Grabacion pertenece a una Sesion
 Grabacion.belongsTo(Sesion, { foreignKey: 'sesion_id', as: 'sesion' });
+//Grabacion.belongsTo(Actuacion, { foreignKey: 'actuacion_id', as: 'actuacion' });
 
 module.exports = Grabacion;
